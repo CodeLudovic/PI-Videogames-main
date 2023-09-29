@@ -1,0 +1,69 @@
+.container {
+    display: grid;
+    height: auto;
+    width: 80vw;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    grid-template-columns:  1fr 1fr 1fr 1fr 1fr;
+    border-radius: 25px;
+    /* border: 1px solid rgb(51, 51, 51); */
+    z-index: 1;
+    margin-top: 30px;
+    justify-items: center;
+}
+
+
+/* ._container_px5r1_1 {
+  display: flex;
+  height: auto;
+  width: 100vw;
+  grid-template-columns: 10% 90%;
+  border-radius: 25px;
+  z-index: 1;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-left: 59px;
+} */
+
+.loadingTitle {
+    font-size: 26px;
+}
+.loaderDiv{
+    display: grid;
+    grid-template-columns: 90% 40%;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border-top: 3px solid #FFF;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+
+  .pagination_content {
+    display: flex;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 350px;
+    height: 40px;
+    border-radius: 25px;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .pagElement {
+    
+  }

@@ -1,0 +1,34 @@
+.pagination {
+  list-style: none;
+  display: flex;
+  position: fixed;
+  right: 780px;
+  top: 89px;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 3;
+  width: 350px;
+  height: 50px;
+  padding: 0px;
+}
+
+.pagination li {
+  z-index: 3;
+}
+
+.pagination button {
+  background-color: black;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+  z-index: 3;
+}
+
+

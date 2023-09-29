@@ -11,7 +11,6 @@ module.exports = (sequelize) => {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
-				unique: true,
 			},
 			code: {
 				type: DataTypes.UUID,
@@ -41,6 +40,10 @@ module.exports = (sequelize) => {
 			},
 			rating: {
 				type: DataTypes.FLOAT,
+				allowNull: false,
+			},
+			source_by: {
+				type: DataTypes.STRING,
 				allowNull: false,
 			},
 		},
