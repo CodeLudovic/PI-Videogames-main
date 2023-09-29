@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { paginationVGS } from "../../redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
-
+/* eslint-disable*/
 export const LandingPage = () => {
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();

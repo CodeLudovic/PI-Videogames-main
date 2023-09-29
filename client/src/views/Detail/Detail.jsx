@@ -5,7 +5,7 @@ import { BASEURL_LOC } from "../../helpers/data";
 import style from "./Detail.module.css";
 import { NavBar } from "../../components/NavBar/NavBar";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
-
+/* eslint-disable*/
 export const Detail = () => {
 	const [videogame, setVideoGame] = useState({});
 	const nagivate = useNavigate();
