@@ -3,11 +3,6 @@ import { NavLink } from "react-router-dom";
 import style from "./Card.module.css";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 export const Card = ({ item }) => {
-	// let gen = "";
-
-	// for (let i = 0; i < item.genres.length; i++) {
-	// 	gen += "1fr ";
-	// }
 	return (
 		<>
 			<NavLink to={`/videogames/detail/${item.id}`} className={style.nav_link}>
@@ -21,19 +16,39 @@ export const Card = ({ item }) => {
 							);
 						})}
 					</div>
+					{item.source_by === "Api" ? (
+						<>
+							<div>
+								<img src={item.background_image} className={style.image_card} />
+							</div>
 
-					<div>
-						<img src={item.background_image} className={style.image_card} />
-					</div>
-					<div className={style.text_name}>{item.name}</div>
+							<div className={style.text_name}>{item.name}</div>
 
-					<div
-						className={style.genre}
-						style={{ gridTemplateRows: "1fr 1fr 1fr" }}>
-						{item.genres?.map((genre) => (
-							<div>&nbsp;{genre.name}</div>
-						))}
-					</div>
+							<div
+								className={style.genre}
+								style={{ gridTemplateRows: "1fr 1fr 1fr" }}>
+								{item.genres?.map((genre) => (
+									<div>&nbsp;{genre.name}</div>
+								))}
+							</div>
+						</>
+					) : (
+						<>
+							<div>
+								<img src={item.image} className={style.image_card} />
+							</div>
+
+							<div className={style.text_name}>{item.name}</div>
+
+							<div
+								className={style.genre}
+								style={{ gridTemplateRows: "1fr 1fr 1fr" }}>
+								{item.genres?.map((genre) => (
+									<div>&nbsp;{genre.name}</div>
+								))}
+							</div>
+						</>
+					)}
 				</div>
 			</NavLink>
 		</>

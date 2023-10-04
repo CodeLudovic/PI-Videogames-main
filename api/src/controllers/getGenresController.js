@@ -2,7 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const { BASE_URL } = require("../utils/data");
 const apiKey = process.env.API_KEY;
-const { Videogame, Genre } = require("../db");
+const { Genre } = require("../db");
 
 const getGenresController = async () => {
 	const genresInDB = await Genre.findAll();
@@ -19,9 +19,7 @@ const getGenresController = async () => {
 		}
 		return data.results;
 	}
-	const genres = await Genre.findAll();
-
-	return genres;
+	return genresInDB;
 };
 
 module.exports = {

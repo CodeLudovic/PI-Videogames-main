@@ -6,44 +6,41 @@ import {
 	RESET,
 	FILTER_BY_SRC,
 	ORDER_BY_RATING,
-	PAGINATION_PAGE,
+	SET_GENRES,
 	ACUMULATION_VGS,
-	SET_CURRENT_PAGE_DATA,
+	ADD_SEARCH,
+	LAST_ID_POSTED,
+	// LOAD_DETAIL
 } from "../type/types.js";
 import axios from "axios";
 
-export const paginationVGS = (state) => {
+// export const loadDetail = (state = [], id) => {
+// 	try {
+// 		return (dispatch) => {
+// 			// const startIndex = (currentPage - 1) * 20;
+// 			// const endIndex = startIndex + 20;
+
+// 			const filteredDetails = state.filter((detail) => detail.id === id);
+
+// 			return dispatch({
+// 				type: SET_CURRENT_PAGE_DATA,
+// 				payload: filteredDetails,
+// 			});
+// 		};
+// 		// eslint-disable-next-line
+// 	} catch (error) {
+// 		console.log(error);
+// 	}
+// };
+
+export const paginationVGS = () => {
 	return async (dispatch) => {
 		try {
-			// if (state.length >= 100) {
-			// 	return;
-			// }
-			let allData = [];
-			for (let i = 0; i < 3; i++) {
-				const endpoint = `http://localhost:3001/videogames?page=${i + 1}`;
-				const { data } = await axios.get(endpoint);
-				const newData = data.filter(
-					(newVideoGame) =>
-						!state.some(
-							(existingVideoGame) => existingVideoGame.id === newVideoGame.id
-						)
-				);
+			const endpoint = `http://localhost:3001/videogames`;
+			const { data } = await axios.get(endpoint);
 
-				allData = [...allData, ...newData];
-
-				// if (allData.length >= 100) {
-				// 	break;
-				// }
-			}
-			const endpoint2 = `http://localhost:3001/videogames/bd/all`;
-			const results = await axios.get(endpoint2);
-			allData = [...allData, ...results.data];
-			// envia solo 100
-			// if (allData.length > 0) {
-			// 	dispatch({ type: ACUMULATION_VGS, payload: allData.slice(0, 100) });
-			// }
-			if (allData.length > 0) {
-				dispatch({ type: ACUMULATION_VGS, payload: allData });
+			if (data.length > 0) {
+				dispatch({ type: ACUMULATION_VGS, payload: data });
 			}
 		} catch (error) {
 			// eslint-disable-next-line
@@ -51,24 +48,24 @@ export const paginationVGS = (state) => {
 		}
 	};
 };
-export const loadVGSPagination = (state = [], currentPage) => {
-	try {
-		return (dispatch) => {
-			const startIndex = (currentPage - 1) * 20;
-			const endIndex = startIndex + 20;
+// export const loadVGSPagination = (state = [], currentPage) => {
+// 	try {
+// 		return (dispatch) => {
+// 			const startIndex = (currentPage - 1) * 20;
+// 			const endIndex = startIndex + 20;
 
-			const vgstate = state.slice(startIndex, endIndex);
+// 			const vgstate = state.slice(startIndex, endIndex);
 
-			return dispatch({
-				type: SET_CURRENT_PAGE_DATA,
-				payload: vgstate,
-			});
-		};
-		// eslint-disable-next-line
-	} catch (error) {
-		console.log(error);
-	}
-};
+// 			return dispatch({
+// 				type: SET_CURRENT_PAGE_DATA,
+// 				payload: vgstate,
+// 			});
+// 		};
+// 		// eslint-disable-next-line
+// 	} catch (error) {
+// 		console.log(error);
+// 	}
+// };
 
 export const addVG = (videogame) => {
 	try {
@@ -101,10 +98,33 @@ export const removeVG = (id) => {
 	}
 };
 
+export const addSearch = (name) => {
+	try {
+		const endpoint = `http://localhost:3001/videogames/name?search=${name}`;
+		return async (dispatch) => {
+			const { data } = await axios(endpoint);
+			console.log(data.results);
+			return dispatch({
+				type: ADD_SEARCH,
+				payload: data.results,
+			});
+		};
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 export const filterVgGender = (gender) => {
 	return {
 		type: FILTER_BY_GENDER,
 		payload: gender,
+	};
+};
+
+export const lastIdPosted = (id) => {
+	return {
+		type: LAST_ID_POSTED,
+		payload: id,
 	};
 };
 
@@ -135,6 +155,18 @@ export const resetVG = () => {
 	};
 };
 
-export const setCurrentPage = (currentPage) => {
-	return { type: PAGINATION_PAGE, payload: currentPage };
+export const setAllGenres = () => {
+	try {
+		const endpoint = "http://localhost:3001/genres";
+		return async (dispatch) => {
+			const { data } = await axios.get(endpoint);
+			return dispatch({
+				type: SET_GENRES,
+				payload: data.response,
+			});
+		};
+		// eslint-disable-next-line
+	} catch (error) {
+		console.log(error);
+	}
 };

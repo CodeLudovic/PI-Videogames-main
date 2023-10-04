@@ -1,4 +1,5 @@
 /* eslint-disable */
+import React from "react";
 import { useEffect, useState } from "react";
 import style from "./Home.module.css";
 import { Link, Navigate, useNavigate } from "react-router-dom";
@@ -17,20 +18,20 @@ import img13 from "../../assets/wp2936684-full-hd-game-wallpaper-1920x1080.jpg";
 import { NavBar } from "../../components/NavBar/NavBar";
 import { Cards } from "../../components/Cards/Cards";
 import { useDispatch, useSelector } from "react-redux";
-import { loadVGSPagination, setCurrentPage } from "../../redux/actions/actions";
 import { Pagination } from "../../components/Pagination/Pagination";
+import { resetVG } from "../../redux/actions/actions";
 
 export const Home = () => {
+	const dispatch = useDispatch();
 	const [backgroundImage, setBackgroundImage] = useState("");
-	const vg = useSelector((state) => state.videoGames);
-	const videoGms = useSelector((state) => state.currentDataPage);
-	const vg2 = useSelector((state) => state.allCurrentDataPage);
-	const currentPage = useSelector((state) => state.currentPage);
+	const [newVideo, setNewVideo] = useState([]);
+	const vg = useSelector((state) => state.allCurrentDataPage);
+	const [pagina, setPagina] = useState(1);
+	const [porPagina, setPorPagina] = useState(15);
+	const maximum = Math.ceil(vg.length / porPagina);
+	const [input, setInput] = useState(1);
 	const nav = useNavigate();
-	let totalPages = 5;
-	//console.log(vg);
-	// console.log(videoGms);
-	// console.log(vg2);
+
 	const backgrounds = [
 		img1,
 		img2,
@@ -45,11 +46,6 @@ export const Home = () => {
 		img12,
 		img13,
 	];
-
-	if (videoGms.length === 0 || vg2.length === 0) {
-		nav("/");
-	}
-
 	useEffect(() => {
 		const selectRandomPic = () => {
 			const randomIndex = Math.floor(Math.random() * backgrounds.length);
@@ -57,19 +53,21 @@ export const Home = () => {
 		};
 
 		setBackgroundImage(selectRandomPic());
-	}, []);
+		localStorage.setItem("videogames", JSON.stringify(vg));
 
-	const dispatch = useDispatch();
+		let videojuegos = JSON.parse(localStorage.getItem("videogames"));
+		setNewVideo(videojuegos);
+		return () => {
+			localStorage.removeItem("videojuegos");
+			dispatch(resetVG());
+		};
+	}, []);
 
 	useEffect(() => {
-		dispatch(loadVGSPagination(vg, currentPage));
+		if (vg.length === 0) {
+			nav("/");
+		}
 	}, []);
-
-	const handlePageChange = (newPage) => {
-		setCurrentPage(newPage);
-		dispatch(loadVGSPagination(vg2, newPage));
-		dispatch(setCurrentPage(newPage));
-	};
 
 	return (
 		<>
@@ -81,14 +79,17 @@ export const Home = () => {
 					}}></div>
 
 				<div className={style.navbar}>
-					<NavBar />
+					<NavBar setInput={setInput} />
 				</div>
 				<Pagination
-					currentPage={currentPage}
-					onPageChange={handlePageChange}
-					totalPages={totalPages}
+					porPagina={porPagina}
+					setPagina={setPagina}
+					pagina={pagina}
+					maximum={maximum}
+					input={input}
+					setInput={setInput}
 				/>
-				<Cards videogames={videoGms} />
+				<Cards videogames={vg} porPagina={porPagina} pagina={pagina} />
 			</div>
 		</>
 	);

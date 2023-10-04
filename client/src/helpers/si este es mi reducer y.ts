@@ -1,24 +1,9 @@
-/* eslint-disable */
-import {
-	LOAD_VGS,
-	ADD_VG,
-	REMOVE_VG,
-	ORDER_BY_ASDC,
-	FILTER_BY_GENDER,
-	RESET,
-	FILTER_BY_SRC,
-	ACUMULATION_VGS,
-	SET_GENRES,
-	ADD_SEARCH,
-	LAST_ID_POSTED,
-} from "../type/types.js";
+si este es mi reducer y 
 
 export const initialState = {
 	videoGames: [],
 	allVideoGames: [],
 	allCurrentDataPage: [],
-	genres: [],
-	lastIdPosted: 0,
 };
 /* eslint-disable */
 export const rootReducer = (state = initialState, { type, payload }) => {
@@ -38,59 +23,38 @@ export const rootReducer = (state = initialState, { type, payload }) => {
 				allCurrentDataPage: payload,
 			};
 		case ADD_VG:
-			console.log(payload);
 			return {
 				...state,
 				allCurrentDataPage: payload,
 			};
-		case LAST_ID_POSTED:
+		case REMOVE_VG:
 			return {
 				...state,
-				lastIdPosted: payload,
+				videoGames: payload,
+				allVideoGames: payload,
+				allCurrentDataPage: payload,
 			};
 
 		case FILTER_BY_GENDER:
-			if (payload === "All") {
-				return {
-					...state,
-					allCurrentDataPage: [...state.allVideoGames],
-				};
-			}
-			const byGenders = state.allCurrentDataPage.filter((videogame) => {
-				const hasGenre = videogame.genres.some((g) => g.name === payload);
-				return hasGenre;
-			});
 			return {
 				...state,
-				allCurrentDataPage: [...byGenders],
+				allCurrentDataPage: state.allCurrentDataPage.filter(
+					(videogame) => videogame.gender === payload
+				),
 			};
 
 		case FILTER_BY_SRC:
-			if (payload === "Api") {
-				return {
-					...state,
-					allCurrentDataPage: state.allCurrentDataPage.filter(
-						(videogame) => videogame.source_by === payload
-					),
-				};
-			} else if (payload === "DB") {
-				return {
-					...state,
-					allCurrentDataPage: state.allVideoGames.filter((videogame) => {
-						return videogame.source_by === payload;
-					}),
-				};
-			}
-
 			return {
 				...state,
-				allCurrentDataPage: [...state.allVideoGames],
+				videoGames: state.allCurrentDataPage.filter(
+					(videogame) => videogame.source_by === payload
+				),
 			};
 
 		case RESET:
 			return {
 				...state,
-				allCurrentDataPage: [...state.allVideoGames],
+				videoGames: [...state.allVideoGames],
 			};
 
 		case ORDER_BY_ASDC:
@@ -117,17 +81,6 @@ export const rootReducer = (state = initialState, { type, payload }) => {
 				...state,
 				allCurrentDataPage: [...result],
 			};
-		case SET_GENRES:
-			return {
-				...state,
-				genres: payload,
-			};
-		case ADD_SEARCH:
-			return {
-				...state,
-				allCurrentDataPage: [...state.allCurrentDataPage, ...payload],
-				allVideoGames: [...state.allCurrentDataPage, ...payload],
-			};
 
 		default:
 			return {
@@ -138,3 +91,7 @@ export const rootReducer = (state = initialState, { type, payload }) => {
 			};
 	}
 };
+
+y me piden hacer esto "Botones/Opciones para filtrar por género, y por si su origen es de la API o de la base de datos (creados por nosotros desde el formulario)"
+
+teniendo en cuenta que los juegos tienen de a 3 generos o muchas veces 1 o 2 porque criterio harias el filtro, es decir, ordenar por algun genero en especifico?

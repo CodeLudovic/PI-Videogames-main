@@ -2,21 +2,27 @@ import style from "./LandingPage.module.css";
 import bckImg from "../../assets/image.jpg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { paginationVGS } from "../../redux/actions/actions";
+import { paginationVGS, setAllGenres } from "../../redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 /* eslint-disable*/
 export const LandingPage = () => {
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
-	const acmvgs = useSelector((state) => state.videoGames);
+	const acmvgs = useSelector((state) => state.allCurrentDataPage);
+	const allvg = useSelector((state) => state.allVideoGames);
 	useEffect(() => {
-		if (acmvgs) {
-			dispatch(paginationVGS(acmvgs));
-			setTimeout(() => {
-				setLoading(false);
-			}, 4700);
-		}
+		dispatch(paginationVGS());
+		dispatch(setAllGenres());
+
+		setTimeout(() => {
+			setLoading(false);
+			localStorage.setItem("videogames", JSON.stringify(acmvgs));
+		}, 4700);
+		return () => {
+			localStorage.removeItem("videogames");
+		};
 	}, []);
+	console.log(acmvgs);
 	return (
 		<div className={style.container}>
 			<span className={style.span}>&lt; Bienvenido a CodeGames! /&gt;</span>

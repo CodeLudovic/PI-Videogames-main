@@ -5,7 +5,7 @@ import { BASEURL_LOC } from "../../helpers/data";
 import style from "./Detail.module.css";
 import { NavBar } from "../../components/NavBar/NavBar";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
-/* eslint-disable*/
+/* eslint-disable */
 export const Detail = () => {
 	const [videogame, setVideoGame] = useState({});
 	const nagivate = useNavigate();
@@ -15,7 +15,6 @@ export const Detail = () => {
 	const handleClick = () => {
 		nagivate(-1); // Retrocede una página en la historia de navegación
 	};
-
 	useEffect(() => {
 		setTimeout(() => {
 			setLoading(false);
@@ -25,8 +24,10 @@ export const Detail = () => {
 	useEffect(() => {
 		axios(`${BASEURL_LOC}${id}`)
 			.then(({ data }) => {
-				if (data.id) {
+				if (data) {
+					console.log(data);
 					setVideoGame(data);
+					console.log(videogame.Genres);
 				} else {
 					window.alert("No hay personajes con ese ID");
 				}
@@ -36,14 +37,7 @@ export const Detail = () => {
 					nagivate("/home");
 				}
 			});
-		// for (let i = 0; i < videogame.genres.length; i++) {
-		// 	genres += videogame.genres[i].name;
-		// }
-
-		return setVideoGame({});
-	}, [id]);
-
-	console.log(videogame.platforms);
+	}, []);
 	return (
 		<div className={style.container}>
 			{loading ? (
@@ -57,11 +51,19 @@ export const Detail = () => {
 				</div>
 			) : (
 				<>
-					<div
-						className={style.alexander}
-						style={{
-							backgroundImage: `url(${videogame.background_image})`,
-						}}></div>
+					{videogame.source_by === "Api" ? (
+						<div
+							className={style.alexander}
+							style={{
+								backgroundImage: `url(${videogame.background_image})`,
+							}}></div>
+					) : (
+						<div
+							className={style.alexander}
+							style={{
+								backgroundImage: `url(${videogame.image})`,
+							}}></div>
+					)}
 					<div className={style.navbar}>
 						<NavBar />
 					</div>
@@ -75,55 +77,78 @@ export const Detail = () => {
 								</button>
 								<div className={style.genres_1}>
 									<div className={style.tittle_genres}>Plaforms:</div>
-									{videogame.parent_platforms?.map((platform, index) => (
-										<div key={index}>
-											<text style={{ color: "white" }}>!* </text>
-											{/* {platform.platform.name === "Xbox Series S/X"
-												? "Xbox S/X"
-												: platform.platform.name === "PlayStation 5"
-												? "PS5"
-												: platform.platform.name === "PlayStation 4"
-												? "PS4"
-												: platform.platform.name === "Xbox One"
-												? "Xbox One"
-												: platform.platform.name === "PC"
-												? "PC"
-												: platform.platform.name === "PC"} */}
-											{platform.platform.name === "PlayStation"
-												? "PS4/PS5"
-												: platform.platform.name === "Apple Macintosh"
-												? "macOS"
-												: platform.platform.name}
-											<text style={{ color: "white" }}> *!</text>
-										</div>
-									))}
+									{videogame.source_by === "Api"
+										? videogame.parent_platforms?.map((platform, index) => (
+												<div key={index}>
+													<text style={{ color: "white" }}>!* </text>
+													{platform.platform.name === "PlayStation"
+														? "PS4/PS5"
+														: platform.platform.name === "Apple Macintosh"
+														? "macOS"
+														: platform.platform.name}
+													<text style={{ color: "white" }}> *!</text>
+												</div>
+										  ))
+										: videogame.platforms?.map((platform, index) => (
+												<div key={index}>
+													<text style={{ color: "white" }}>!* </text>
+													{platform === "PlayStation"
+														? "PS4/PS5"
+														: platform === "Apple Macintosh"
+														? "macOS"
+														: platform}
+													<text style={{ color: "white" }}> *!</text>
+												</div>
+										  ))}
 								</div>
 							</div>
-
-							<img
-								className={style.imageDetail}
-								src={videogame.background_image}
-							/>
+							{videogame.source_by === "Api" ? (
+								<img
+									className={style.imageDetail}
+									src={videogame.background_image}
+								/>
+							) : (
+								<img className={style.imageDetail} src={videogame.image} />
+							)}
 							<div className={style.genres}>
 								<div className={style.tittle_genres}>Genres:</div>
-								{videogame.genres?.map((genre, index) => (
-									<div key={index}>
-										<text style={{ color: "white" }}>!*</text>{" "}
-										{genre.name === "Massively Multiplayer"
-											? "MMO"
-											: genre.name}
-										<text style={{ color: "white" }}> *!</text>
-									</div>
-								))}
+								{videogame.source_by === "Api"
+									? videogame.genres?.map((genre, index) => (
+											<div key={index}>
+												<text style={{ color: "white" }}>!*</text>{" "}
+												{genre.name === "Massively Multiplayer"
+													? "MMO"
+													: genre.name}
+												<text style={{ color: "white" }}> *!</text>
+											</div>
+									  ))
+									: Array.from(videogame.Genres)?.map((genre, index) => (
+											<>
+												<div key={index}>
+													<text style={{ color: "white" }}>!*</text>{" "}
+													{genre.name === "Massively Multiplayer"
+														? "MMO"
+														: genre.name}
+													<text style={{ color: "white" }}> *!</text>
+												</div>
+											</>
+									  ))}
 							</div>
 						</div>
 						<div className={style.text_name_detail}>
 							{videogame.name} - ID:{videogame.id}
 						</div>
 
-						<div
-							className={style.text_description_detail}
-							dangerouslySetInnerHTML={htmlContent}></div>
+						{videogame.source_by === "Api" ? (
+							<div
+								className={style.text_description_detail}
+								dangerouslySetInnerHTML={htmlContent}></div>
+						) : (
+							<div className={style.text_description_detail}>
+								{videogame.description}
+							</div>
+						)}
+
 						<div className={style.footer_detail}>
 							<div className={style.text_release_detail}>
 								Released:{" "}

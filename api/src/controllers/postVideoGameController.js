@@ -1,12 +1,14 @@
 require("dotenv").config();
+const axios = require("axios");
 const { Videogame, Genre } = require("../db");
 
 const postVideoGamesController = async (
+	id,
 	name,
 	description,
 	platforms,
 	image,
-	released,
+	release,
 	rating,
 	source_by,
 	genres
@@ -14,10 +16,11 @@ const postVideoGamesController = async (
 	const [videoGame, created] = await Videogame.findOrCreate({
 		where: { name: name },
 		defaults: {
+			id: id,
 			description: description,
 			platforms: platforms,
 			image: image,
-			released: released,
+			released: release,
 			rating: rating,
 			source_by: source_by,
 		},
@@ -33,7 +36,10 @@ const postVideoGamesController = async (
 		});
 		await videoGame.addGenres(genre);
 	}
-	return { message: "Game created succesfully" };
+
+	const allVg = await axios.get(`http://localhost:3001/videogames`);
+
+	return allVg;
 };
 
 module.exports = {

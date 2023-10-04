@@ -31,4 +31,76 @@
   z-index: 3;
 }
 
+/*/
+// axios(`${BASEURL_LOC}${id}`)
+// 	.then(({ data }) => {
+// 		if (data.id) {
+// 			setVideoGame(data);
+// 		} else {
+// 			window.alert("No hay personajes con ese ID");
+// 		}
+// 	})
+// 	.catch((error) => {
+// 		if (error.response || error.response.status === 404) {
+// 			nagivate("/home");
+// 		}
+// 	});
+// for (let i = 0; i < videogame.genres.length; i++) {
+// 	genres += videogame.genres[i].name;
+// }
 
+
+export const paginationVGS = (state) => {
+	return async (dispatch) => {
+		try {
+			// if (state.length >= 100) {
+			// 	return;
+			// }
+			const endpointDb = `http://localhost:3001/videogames/bd/all`;
+			const results = await axios.get(endpointDb);
+			const dbData = results.data;
+
+			let allData = [];
+			for (let i = 0; i < 3; i++) {
+				const endpoint = `http://localhost:3001/videogames?page=${i + 1}`;
+				const { data } = await axios.get(endpoint);
+				const newData = data.filter(
+					(newVideoGame) =>
+						!state.some(
+							(existingVideoGame) => existingVideoGame.id === newVideoGame.id
+						)
+				);
+
+				allData.push(...newData);
+			}
+
+			allData = [...allData, ...dbData];
+			
+			// Elimina duplicados en el arreglo combinado
+			const uniqueData = allData.filter(
+				(newVideoGame, index, self) =>
+					index === self.findIndex((v) => v.id === newVideoGame.id)
+			);
+
+			if (uniqueData.length > 0) {
+				dispatch({ type: ACUMULATION_VGS, payload: uniqueData });
+			}
+		} catch (error) {
+			// eslint-disable-next-line
+			console.log(error);
+		}
+	};
+};
+
+	// function handleChange(event) {
+
+	// 	setForm({
+	// 		...form,
+	// 		[event.target.name]: event.target.value,
+	// 		platforms: selectedPlatforms,
+	// 		genres: selectedGenres,
+	// 		rating: inputElement.value,
+	// 	});
+
+	// 	console.log(form);
+	// }

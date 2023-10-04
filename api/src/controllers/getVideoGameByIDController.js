@@ -22,6 +22,7 @@ const getVideoGamesByIDController = async (idVideogame) => {
 	const { data } = await axios(`${BASE_URL}games/${idVideogame}?key=${apiKey}`);
 
 	if (data) {
+		data.source_by = "Api";
 		return data;
 	}
 

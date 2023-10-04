@@ -1,5 +1,6 @@
 require("dotenv").config();
 const apiKey = process.env.API_KEY;
+const axios = require("axios");
 const { getGenresController } = require("../controllers/getGenresController");
 const {
 	getVideoGamesByIDController,
@@ -16,6 +17,8 @@ const {
 const {
 	postVideoGamesController,
 } = require("../controllers/postVideoGameController");
+
+const CircularJSON = require("circular-json");
 
 const { Videogame } = require("../db");
 
@@ -52,39 +55,43 @@ const videoGamesByIDHandler = async (req, res) => {
 };
 
 const getVideoGamesHandler = async (req, res) => {
-	let vgs = await Videogame.findAll();
-	const { page } = req.query;
 	try {
-		const response = await getVideoGamesController(page);
-		let allData = [...response, ...vgs];
-		return res.status(200).json(allData);
+		const response = await getVideoGamesController();
+		return res.status(200).json(response);
 	} catch (error) {
 		return res.status(404).json({ message: error.message });
 	}
 };
 
 const postVideoGamesHandler = async (req, res) => {
-	const { name, description, platforms, image, released, rating, genres } =
+	const { id, name, description, platforms, image, release, rating, genres } =
 		req.body;
 	const source_by = "DB";
+	console.log(id, name, description, platforms, image, release, rating, genres);
 	if (
 		(!name || !description || !platforms || !image,
-		!released || !rating || !genres)
+		!release || !rating || !genres)
 	) {
 		return res.status(403).json({ message: "Lack of Data" });
 	}
+
 	try {
-		const response = await postVideoGamesController(
+		await postVideoGamesController(
+			id,
 			name,
 			description,
 			platforms,
 			image,
-			released,
+			release,
 			rating,
 			source_by,
 			genres
 		);
-		return res.status(200).json(response);
+		const allVg = await axios.get(`http://localhost:3001/videogames`);
+
+		//const serializedData = JSON.stringify(allVg);
+
+		return res.status(200).json(allVg.data);
 	} catch (error) {
 		return res.status(404).json({ message: error.message });
 	}
@@ -93,7 +100,7 @@ const postVideoGamesHandler = async (req, res) => {
 const getGenresHandler = async (req, res) => {
 	try {
 		const response = await getGenresController();
-		return res.status(200).json(response);
+		return res.status(200).json({ response });
 	} catch (error) {
 		return res.status(404).json({ message: error.message });
 	}
@@ -112,6 +119,26 @@ const videoGamesByBDHandler = async (req, res) => {
 	}
 };
 
+const getGenresForVideoGame = async (videoGameId) => {
+	try {
+		const videoGameFromDB = await Videogame.findByPk(videoGameId, {
+			include: [
+				{
+					model: Genre,
+					through: "VideoGameGenre",
+					attributes: ["name"],
+				},
+			],
+		});
+
+		// Devuelve los géneros asociados a este videojuego
+		return videoGameFromDB;
+	} catch (error) {
+		console.error("Error en getGenresForVideoGame:", error);
+		throw error;
+	}
+};
+
 module.exports = {
 	videoGamesHandler,
 	videoGamesByIDHandler,
@@ -119,4 +146,5 @@ module.exports = {
 	postVideoGamesHandler,
 	getGenresHandler,
 	videoGamesByBDHandler,
+	getGenresForVideoGame,
 };

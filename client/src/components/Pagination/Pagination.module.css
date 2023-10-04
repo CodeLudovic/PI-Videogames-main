@@ -1,7 +1,7 @@
 .pagination_content {
-  display: grid;
+  display: flex;
   position: fixed;
-  width: 380px;
+  width: 500px;
   height: 55px;
   border-radius: 25px;
   justify-content: center;
@@ -10,8 +10,12 @@
   z-index: 3;
   margin-top: 110px;
   background-color: rgba(19, 19, 19, 1);
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  justify-items: center;
+  align-items: center;
+  align-content: center;
+  justify-items: end;
+  gap: 25px;
+  border: 1px solid #333333;
+  box-shadow: 4px 7px 5px rgba(0, 0, 0, 0.4);
   }
   
   .button_pagination {
@@ -41,4 +45,71 @@
   width: 50px;
   align-items: center;
   justify-content: center;  
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  z-index: 1;
+}
+
+.button_pag[disabled] {
+  background-color: #474747;
+  cursor: no-drop;
+}
+
+.input_pag {
+  height: 20px;
+  width: 30px;
+  text-align: center;
+  border: 1px solid #242424;
+  border-radius: 3px;
+}
+
+.button_pag {
+  background-color: #242424;
+  padding: 5px;
+  border-radius: 3px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+
+}
+
+.button_pag_next {
+  background-color: #242424;
+  padding: 5px;
+  border-radius: 3px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.button_pag_next:active, .button_pag_prev:active {
+  background-color: #50215B;
+}
+
+.button_pag_prev {
+  background-color: #242424;
+  padding: 5px;
+  border-radius: 3px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.center_pag{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }

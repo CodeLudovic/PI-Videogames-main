@@ -64,6 +64,8 @@
     z-index: 1;
   }
 
-  .pagElement {
-    
+  .noElements {
+    display: flex;
+    font-size: 25px;
+    margin-bottom: 300px;
   }

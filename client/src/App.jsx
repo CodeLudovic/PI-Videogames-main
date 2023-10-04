@@ -7,6 +7,7 @@ import { Home } from "./views/Home/Home";
 import { Detail } from "./views/Detail/Detail";
 import { Cards } from "./components/Cards/Cards";
 import { NavBar } from "./components/NavBar/NavBar";
+import { CreateForm } from "./views/CreateForm/CreateForm";
 
 function App() {
 	return (
@@ -33,6 +34,14 @@ function App() {
 					element={
 						<>
 							<Detail />
+						</>
+					}
+				/>
+				<Route
+					path="videogames/create"
+					element={
+						<>
+							<CreateForm />
 						</>
 					}
 				/>

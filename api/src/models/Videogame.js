@@ -9,7 +9,6 @@ module.exports = (sequelize) => {
 			id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
-				autoIncrement: true,
 				primaryKey: true,
 			},
 			code: {
@@ -35,7 +34,7 @@ module.exports = (sequelize) => {
 				allowNull: false,
 			},
 			released: {
-				type: DataTypes.DATE,
+				type: DataTypes.DATEONLY,
 				allowNull: false,
 			},
 			rating: {
