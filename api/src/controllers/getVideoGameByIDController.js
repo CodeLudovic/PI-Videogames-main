@@ -5,20 +5,23 @@ const apiKey = process.env.API_KEY;
 const { Videogame, Genre } = require("../db");
 
 const getVideoGamesByIDController = async (idVideogame) => {
-	const videoGameFromDB = await Videogame.findByPk(idVideogame, {
-		include: [
-			{
-				model: Genre,
-				through: "VideoGameGenre",
-				attributes: ["name"],
-			},
-		],
-	});
+	const uuidPattern =
+		/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+	if (uuidPattern.test(idVideogame)) {
+		const videoGameFromDB = await Videogame.findByPk(idVideogame, {
+			include: [
+				{
+					model: Genre,
+					through: "VideoGameGenre",
+					attributes: ["name"],
+				},
+			],
+		});
 
-	if (videoGameFromDB) {
-		return videoGameFromDB;
+		if (videoGameFromDB) {
+			return videoGameFromDB;
+		}
 	}
-
 	const { data } = await axios(`${BASE_URL}games/${idVideogame}?key=${apiKey}`);
 
 	if (data) {

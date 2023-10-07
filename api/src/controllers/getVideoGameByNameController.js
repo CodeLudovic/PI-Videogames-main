@@ -1,34 +1,39 @@
 require("dotenv").config();
-const apiKey = process.env.API_KEY;
 const axios = require("axios");
 const { BASE_URL } = require("../utils/data");
-const { Videogame } = require("../db");
+const { Videogame, Genre } = require("../db");
 const { Op } = require("sequelize");
 
 const getVideoGamesByNameController = async (name, apiKey) => {
+	const dbResults = await Videogame.findAll({
+		where: {
+			name: {
+				[Op.iLike]: `%${name}%`,
+			},
+		},
+		include: Genre,
+	});
+
+	const formattedDbData = dbResults.map((videojuego) => {
+		const formattedVideojuego = { ...videojuego.toJSON() };
+		if (formattedVideojuego.Genres) {
+			formattedVideojuego.genres = formattedVideojuego.Genres;
+			delete formattedVideojuego.Genres;
+		}
+		formattedVideojuego.source_by = "DB";
+		return formattedVideojuego;
+	});
+
 	const apiResponse = await axios(
-		`${BASE_URL}games?search=${name}&key=${apiKey}&page_size=15`
+		`${BASE_URL}games?search=${name}&key=${apiKey}`
 	);
 	const apiResults = apiResponse.data.results.map((game) => ({
 		...game,
 		source_by: "Api",
 	}));
 
-	const dbResults = await Videogame.findAll({
-		where: {
-			name: {
-				[Op.iLike]: `${name}`,
-			},
-		},
-		limit: 15,
-	});
-
-	const dbResponse = dbResults.map((game) => ({
-		...game,
-		source_by: "DB",
-	}));
-
-	const combinedResults = [...apiResults, ...dbResponse];
+	const slicedData = apiResults.slice(formattedDbData.length, 15);
+	const combinedResults = formattedDbData.concat(slicedData);
 
 	return combinedResults;
 };

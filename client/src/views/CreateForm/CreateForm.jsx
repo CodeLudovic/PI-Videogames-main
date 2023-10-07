@@ -17,22 +17,20 @@ import { useEffect, useState } from "react";
 import { API_KEY } from "../../helpers/data";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { maxID } from "../../helpers/utils";
-import { addVG, lastIdPosted } from "../../redux/actions/actions";
+import { addVG, paginationVGS, setCreated } from "../../redux/actions/actions";
 import { validate } from "../../helpers/validation";
 import { useNavigate } from "react-router-dom";
 validate;
 /* eslint-disable */
 export const CreateForm = () => {
 	const [backgroundImage, setBackgroundImage] = useState("");
+
 	const [genres, setGenres] = useState([]);
 	const [platforms, setPlatforms] = useState([]);
-	const vg = useSelector((state) => state.allCurrentDataPage);
-	const ltPostedId = useSelector((state) => state.lastIdPosted);
+	const created = useSelector((state) => state.created);
 	const [errors, setErrors] = useState({});
 	const nav = useNavigate();
 	const [form, setForm] = useState({
-		id: maxID(vg),
 		name: "",
 		description: "",
 		platforms: [],
@@ -56,16 +54,21 @@ export const CreateForm = () => {
 		img12,
 		img13,
 	];
-	useEffect((event) => {
-		dispatch(lastIdPosted(maxID(vg) + 1));
+	useEffect(() => {
 		handlerGenres();
 		handlerPlatforms();
+		setErrors(validate(form));
+		dispatch(setCreated(false));
+		dispatch(paginationVGS());
 		const selectRandomPic = () => {
 			const randomIndex = Math.floor(Math.random() * backgrounds.length);
 			return backgrounds[randomIndex];
 		};
-
 		setBackgroundImage(selectRandomPic());
+
+		return () => {
+			dispatch(paginationVGS());
+		};
 	}, []);
 
 	const handlerGenres = async () => {
@@ -111,7 +114,6 @@ export const CreateForm = () => {
 			}));
 		}
 	};
-	//console.log(vg);
 	const handleChange = (event) => {
 		const { name, value } = event.target;
 
@@ -120,19 +122,20 @@ export const CreateForm = () => {
 			[name]: value,
 		});
 		setErrors(validate({ ...form, [name]: value }));
+		if (Object.keys(errors).length === 0) {
+			dispatch(setCreated(true));
+		}
 	};
-	console.log(typeof ltPostedId);
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setForm({
 			...form,
-			id: ltPostedId,
 		});
-		dispatch(addVG(form));
-		let videojuegos = JSON.parse(localStorage.getItem("videogames"));
-		videojuegos.push(form);
-		localStorage.setItem("videogames", JSON.stringify(videojuegos));
-		nav("/home");
+		if (created) {
+			dispatch(addVG(form));
+			alert("Your have been created successfully!");
+			nav("/home");
+		}
 	};
 	return (
 		<div className={style.container}>
@@ -151,7 +154,6 @@ export const CreateForm = () => {
 						Object.keys(errors).length === 0 ? { gap: "25px" } : { gap: "6px" }
 					}
 					onSubmit={handleSubmit}>
-					<div className={styleCt.iD}>ID: {maxID(vg)}</div>
 					<div>
 						<label>Name:</label>
 						<br />

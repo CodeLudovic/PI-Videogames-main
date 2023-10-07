@@ -76,8 +76,8 @@ span {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 80vh; /* Establece una altura mínima inicial (ajusta según tus necesidades) */
-    height: auto; /* Permite que la altura se ajuste automáticamente según el contenido */
+    min-height: 80vh;
+    height: auto;
     overflow: hidden;
   }
 
@@ -88,7 +88,14 @@ span {
     border: 2px solid gray;
     padding: 5px;
     margin-top: 25px;
-    margin-left: 40px;
+  }
+
+  .imageDetail_api{
+    width: 500px;
+    border-radius: 10px;
+    border: 2px solid ;
+    border: 2px solid gray;
+    padding: 5px;
   }
 
   .text_description_detail{
@@ -98,8 +105,11 @@ span {
     margin-top: 10px;
   }
   .text_name_detail {
-    margin-top: 20px;
     color: #6FF5E6;
+  }
+
+  .text_id{
+    margin-bottom: 10px;
   }
 
   .text_release_detail{
@@ -113,10 +123,11 @@ span {
 
   .footer_detail {
     display: flex;
-    /* grid-template-columns: 1fr 1fr; */
     width: 900px;
-    justify-content: space-around;
     margin-top: 15px;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
   }
 
   .text_released {
@@ -138,6 +149,29 @@ span {
     right: 1394px;
   }
 
+  .platforms{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #6FF5E6;
+   
+    font-size: 15px;
+    width: 270px;
+  }
+
+  .containerDetails{
+    display: flex;
+  }
+
+  .divAll {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+
   .button_back:active {
     background-color: #50215B;
   }
@@ -149,6 +183,7 @@ span {
     align-items: center;
     color: #6FF5E6;
     font-size: 17px;
+    width: 264px;
   }
   .tittle_genres{
     color: white;

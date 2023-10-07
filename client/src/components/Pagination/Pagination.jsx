@@ -1,42 +1,67 @@
 /* eslint-disable */
-import { NavLink } from "react-router-dom";
 import styles from "./Pagination.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Pagination = ({
 	input,
-	porPagina,
-	setPagina,
-	pagina,
+	forPage,
+	setPage,
+	page,
 	maximum,
 	setInput,
 }) => {
+	const [isHidden, setIsHidden] = useState(false);
+
+	useEffect(() => {
+		let prevScrollPos = window.scrollY;
+
+		const handleScroll = () => {
+			const currentScrollPos = window.scrollY;
+
+			if (prevScrollPos > currentScrollPos) {
+				// El usuario está haciendo scroll hacia arriba, muestra la barra
+				setIsHidden(false);
+			} else {
+				// El usuario está haciendo scroll hacia abajo, oculta la barra
+				setIsHidden(true);
+			}
+
+			prevScrollPos = scrollY;
+		};
+
+		window.addEventListener("scroll", handleScroll);
+
+		return () => {
+			// Limpia el listener de scroll en la desmontura del componente
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 	const nextPage = () => {
-		if (pagina === maximum) return;
+		if (page === maximum) return;
 
 		setInput(parseInt(input) + 1);
-		setPagina(parseInt(pagina) + 1);
+		setPage(parseInt(page) + 1);
 	};
 
 	const previousPage = () => {
-		if (pagina === 1) return;
+		if (page === 1) return;
 
 		setInput(parseInt(input) - 1);
-		setPagina(parseInt(pagina) - 1);
+		setPage(parseInt(page) - 1);
 	};
 
 	const onKeyDown = (e) => {
 		if (e.keyCode == 13) {
-			setPagina(parseInt(input));
+			setPage(parseInt(input));
 			if (
 				parseInt(input < 1) ||
 				parseInt(input) > Math.ceil(maximum) ||
 				isNaN(parseInt(input))
 			) {
-				setPagina(1);
+				setPage(1);
 				setInput(1);
 			} else {
-				setPagina(parseInt(input));
+				setPage(parseInt(input));
 			}
 		}
 	};
@@ -49,7 +74,7 @@ export const Pagination = ({
 		<div className={styles.pagination_content}>
 			<button
 				className={styles.button_pag_prev}
-				disabled={pagina === 1 || pagina < 1}
+				disabled={page === 1 || page < 1}
 				onClick={previousPage}>
 				<svg
 					width="22"
@@ -71,13 +96,13 @@ export const Pagination = ({
 					onKeyDown={() => onKeyDown()}
 					name="page"
 					autoComplete="off"
-					value={input}
+					value={maximum === 0 ? 0 : input}
 				/>
 				<p> de {maximum} </p>
 			</div>
 			<button
 				className={styles.button_pag_next}
-				disabled={pagina === Math.ceil(maximum) || pagina > Math.ceil(maximum)}
+				disabled={page === Math.ceil(maximum) || page > Math.ceil(maximum)}
 				onClick={nextPage}>
 				<svg
 					width="22"

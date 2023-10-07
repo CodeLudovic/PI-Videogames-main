@@ -13,7 +13,7 @@ export const Detail = () => {
 	const htmlContent = { __html: videogame.description_raw };
 	const [loading, setLoading] = useState(true);
 	const handleClick = () => {
-		nagivate(-1); // Retrocede una página en la historia de navegación
+		nagivate(-1);
 	};
 	useEffect(() => {
 		setTimeout(() => {
@@ -25,9 +25,7 @@ export const Detail = () => {
 		axios(`${BASEURL_LOC}${id}`)
 			.then(({ data }) => {
 				if (data) {
-					console.log(data);
 					setVideoGame(data);
-					console.log(videogame.Genres);
 				} else {
 					window.alert("No hay personajes con ese ID");
 				}
@@ -68,52 +66,34 @@ export const Detail = () => {
 						<NavBar />
 					</div>
 					<div className={style.detail_container}>
-						<div className={style.header_detail}>
-							<div>
-								<button
-									onClick={() => handleClick()}
-									className={style.button_back}>
-									Go Back
-								</button>
-								<div className={style.genres_1}>
-									<div className={style.tittle_genres}>Plaforms:</div>
-									{videogame.source_by === "Api"
-										? videogame.parent_platforms?.map((platform, index) => (
-												<div key={index}>
-													<text style={{ color: "white" }}>!* </text>
-													{platform.platform.name === "PlayStation"
-														? "PS4/PS5"
-														: platform.platform.name === "Apple Macintosh"
-														? "macOS"
-														: platform.platform.name}
-													<text style={{ color: "white" }}> *!</text>
-												</div>
-										  ))
-										: videogame.platforms?.map((platform, index) => (
-												<div key={index}>
-													<text style={{ color: "white" }}>!* </text>
-													{platform === "PlayStation"
-														? "PS4/PS5"
-														: platform === "Apple Macintosh"
-														? "macOS"
-														: platform}
-													<text style={{ color: "white" }}> *!</text>
-												</div>
-										  ))}
-								</div>
-							</div>
-							{videogame.source_by === "Api" ? (
-								<img
-									className={style.imageDetail}
-									src={videogame.background_image}
-								/>
-							) : (
-								<img className={style.imageDetail} src={videogame.image} />
-							)}
-							<div className={style.genres}>
-								<div className={style.tittle_genres}>Genres:</div>
-								{videogame.source_by === "Api"
-									? videogame.genres?.map((genre, index) => (
+						{videogame.source_by === "Api" ? (
+							<>
+								<div className={style.text_name_detail}>{videogame.name}</div>
+								<div className={style.text_id}> ID: {videogame.id}</div>
+								<div className={style.divAll}>
+									<div className={style.platforms}>
+										<div className={style.tittle_genres}>Plaforms:</div>
+										{videogame.source_by === "Api"
+											? videogame.parent_platforms?.map((platform, index) => (
+													<div key={index}>
+														<text style={{ color: "white" }}>!* </text>
+														{platform.platform.name === "PlayStation"
+															? "PS4/PS5"
+															: platform.platform.name === "Apple Macintosh"
+															? "macOS"
+															: platform.platform.name}
+														<text style={{ color: "white" }}> *!</text>
+													</div>
+											  ))
+											: null}
+									</div>
+									<img
+										className={style.imageDetail_api}
+										src={videogame.background_image}
+									/>
+									<div className={style.genres}>
+										<div className={style.tittle_genres}>Genres:</div>
+										{videogame.genres?.map((genre, index) => (
 											<div key={index}>
 												<text style={{ color: "white" }}>!*</text>{" "}
 												{genre.name === "Massively Multiplayer"
@@ -121,24 +101,58 @@ export const Detail = () => {
 													: genre.name}
 												<text style={{ color: "white" }}> *!</text>
 											</div>
-									  ))
-									: Array.from(videogame.Genres)?.map((genre, index) => (
-											<>
-												<div key={index}>
-													<text style={{ color: "white" }}>!*</text>{" "}
-													{genre.name === "Massively Multiplayer"
-														? "MMO"
-														: genre.name}
-													<text style={{ color: "white" }}> *!</text>
-												</div>
-											</>
-									  ))}
-							</div>
-						</div>
-						<div className={style.text_name_detail}>
-							{videogame.name} - ID:{videogame.id}
-						</div>
+										))}
+									</div>
+								</div>
+							</>
+						) : (
+							<>
+								<div className={style.text_name_detail}>{videogame.name}</div>
+								<div className={style.text_id}> ID: {videogame.id}</div>
 
+								<div className={style.divAll}>
+									<div className={style.platforms}>
+										<div className={style.tittle_genres}>Plaforms:</div>
+										{videogame.platforms?.map((platform, index) => (
+											<div key={index}>
+												<text style={{ color: "white" }}>!* </text>
+												{platform === "PlayStation"
+													? "PS4/PS5"
+													: platform === "Apple Macintosh"
+													? "macOS"
+													: platform === "Commodore / Amiga"
+													? "Amiga"
+													: [platform]}
+												<text style={{ color: "white" }}> *!</text>
+											</div>
+										))}
+									</div>
+									<img
+										className={style.imageDetail_api}
+										src={videogame.image}
+									/>
+									<div className={style.genres}>
+										<div className={style.tittle_genres}>Genres:</div>
+										{videogame.Genres?.map((genre, index) => (
+											<div key={index}>
+												<text style={{ color: "white" }}>!*</text>{" "}
+												{genre.name === "Massively Multiplayer"
+													? "MMO"
+													: genre.name}
+												<text style={{ color: "white" }}> *!</text>
+											</div>
+										))}
+									</div>
+								</div>
+							</>
+						)}
+						<div className={style.header_detail}>
+							<button
+								onClick={() => handleClick()}
+								className={style.button_back}>
+								Go Back
+							</button>
+						</div>
 						{videogame.source_by === "Api" ? (
 							<div
 								className={style.text_description_detail}

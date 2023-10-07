@@ -14,17 +14,21 @@ import { useEffect, useState } from "react";
 import { setAllGenres } from "../../redux/actions/actions";
 
 /* eslint-disable */
-export const NavBar = ({ setInput }) => {
+export const NavBar = ({ setInput, setPage }) => {
 	const [source, setSource] = useState("By Source");
 	const dispatch = useDispatch();
 	const [genres, setGenres] = useState([]);
 
 	function handlerOrder(e) {
 		dispatch(orderByAsdc(e.target.value));
+		setInput(1);
+		setPage(1);
 	}
 
 	function handlerFilterByGender(e) {
 		dispatch(filterVgGender(e.target.value));
+		setInput(1);
+		setPage(1);
 	}
 
 	function handlerFilterBySource(e) {
@@ -36,16 +40,19 @@ export const NavBar = ({ setInput }) => {
 			setSource("Api");
 			dispatch(filterVgSrc("Api"));
 			setInput(1);
+			setPage(1);
 		}
 		if (source === "Api") {
 			setSource("DB");
 			dispatch(filterVgSrc("DB"));
 			setInput(1);
+			setPage(1);
 		}
 		if (source === "DB") {
 			setSource("By Source");
 			dispatch(resetVG());
 			setInput(1);
+			setPage(1);
 		}
 	}
 
@@ -54,6 +61,8 @@ export const NavBar = ({ setInput }) => {
 		selectGender.value = "Gender";
 		const selectOrder = document.getElementById("selectOrder");
 		selectOrder.value = "Order";
+		setInput(1);
+		setPage(1);
 		setSource("By Source");
 		dispatch(resetVG());
 	}
@@ -90,7 +99,10 @@ export const NavBar = ({ setInput }) => {
 						<button className={style.button_create}>Create Game!</button>
 					</NavLink>
 					<div className={style.divButtons}>
-						<button onClick={handlerSource} className={style.button_source}>
+						<button
+							id="buttonSrc"
+							onClick={handlerSource}
+							className={style.button_source}>
 							{source}
 						</button>
 						<div>
@@ -130,7 +142,7 @@ export const NavBar = ({ setInput }) => {
 					</div>
 
 					<div className={style.searchBar}>
-						<SearchBar />
+						<SearchBar setInput={setInput} setPage={setPage} />
 					</div>
 				</>
 			)}

@@ -2,9 +2,13 @@
 import style from "./Cards.module.css";
 import { Card } from "../Card/Card";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-export const Cards = ({ videogames, porPagina, pagina }) => {
+export const Cards = ({ videogames, forPage, page }) => {
 	const [loading, setLoading] = useState(true);
+	const named = document.getElementById("inp");
+	const buttonSrc = document.getElementById("buttonSrc");
+	const navigate = useNavigate();
 	useEffect(() => {
 		setTimeout(() => {
 			setLoading(false);
@@ -12,12 +16,16 @@ export const Cards = ({ videogames, porPagina, pagina }) => {
 		return () => {};
 	}, []);
 
+	const handlerMove = () => {
+		navigate("/videogames/create");
+	};
+
 	return (
 		<div className={style.container} style={{ gridTemplateColumns: "1fr" }}>
 			{loading ? (
 				<div className={style.loaderDiv}>
 					<div>
-						<h1 key={pagina} className={style.loadingTitle}>
+						<h1 key={page} className={style.loadingTitle}>
 							Loading
 						</h1>
 					</div>
@@ -27,19 +35,21 @@ export const Cards = ({ videogames, porPagina, pagina }) => {
 				</div>
 			) : (
 				<div className={style.container}>
-					{videogames.length > 0 ? (
+					{videogames?.length > 0 ? (
 						videogames
-							.slice(
-								(pagina - 1) * porPagina,
-								(pagina - 1) * porPagina + porPagina
-							)
+							?.slice((page - 1) * forPage, (page - 1) * forPage + forPage)
 							.map((videogame) => <Card key={videogame.id} item={videogame} />)
 					) : (
 						<>
 							<div></div>
 							<div></div>
 							<div className={style.noElements}>
-								No hay elementos disponibles
+								{videogames && (
+									<p style={{ textAlign: "center", width: "600px" }}>
+										There is nothing elements to retrieve from the DB,Go create
+										one with the button "Create Game!"
+									</p>
+								)}
 							</div>
 						</>
 					)}

@@ -6,6 +6,7 @@ const {
 	postVideoGamesHandler,
 	getGenresHandler,
 	videoGamesByBDHandler,
+	getLastIDHandler,
 } = require("../handlers/videoGamesHandlers");
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');

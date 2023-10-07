@@ -26,9 +26,10 @@ export const Home = () => {
 	const [backgroundImage, setBackgroundImage] = useState("");
 	const [newVideo, setNewVideo] = useState([]);
 	const vg = useSelector((state) => state.allCurrentDataPage);
-	const [pagina, setPagina] = useState(1);
-	const [porPagina, setPorPagina] = useState(15);
-	const maximum = Math.ceil(vg.length / porPagina);
+	const vg2 = useSelector((state) => state.allVideoGames);
+	const [page, setPage] = useState(1);
+	const [forPage, setForPage] = useState(15);
+	const maximum = Math.ceil(vg?.length / forPage);
 	const [input, setInput] = useState(1);
 	const nav = useNavigate();
 
@@ -57,14 +58,10 @@ export const Home = () => {
 
 		let videojuegos = JSON.parse(localStorage.getItem("videogames"));
 		setNewVideo(videojuegos);
-		return () => {
-			localStorage.removeItem("videojuegos");
-			dispatch(resetVG());
-		};
 	}, []);
 
 	useEffect(() => {
-		if (vg.length === 0) {
+		if (vg2.length === 0) {
 			nav("/");
 		}
 	}, []);
@@ -79,17 +76,17 @@ export const Home = () => {
 					}}></div>
 
 				<div className={style.navbar}>
-					<NavBar setInput={setInput} />
+					<NavBar setInput={setInput} setPage={setPage} />
 				</div>
 				<Pagination
-					porPagina={porPagina}
-					setPagina={setPagina}
-					pagina={pagina}
+					forPage={forPage}
+					setPage={setPage}
+					page={page}
 					maximum={maximum}
 					input={input}
 					setInput={setInput}
 				/>
-				<Cards videogames={vg} porPagina={porPagina} pagina={pagina} />
+				<Cards videogames={vg} forPage={forPage} page={page} />
 			</div>
 		</>
 	);

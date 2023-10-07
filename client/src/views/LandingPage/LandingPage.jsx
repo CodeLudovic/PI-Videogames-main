@@ -9,7 +9,6 @@ export const LandingPage = () => {
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
 	const acmvgs = useSelector((state) => state.allCurrentDataPage);
-	const allvg = useSelector((state) => state.allVideoGames);
 	useEffect(() => {
 		dispatch(paginationVGS());
 		dispatch(setAllGenres());
@@ -22,7 +21,6 @@ export const LandingPage = () => {
 			localStorage.removeItem("videogames");
 		};
 	}, []);
-	console.log(acmvgs);
 	return (
 		<div className={style.container}>
 			<span className={style.span}>&lt; Bienvenido a CodeGames! /&gt;</span>

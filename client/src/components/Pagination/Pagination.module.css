@@ -15,9 +15,9 @@
   justify-items: end;
   gap: 25px;
   border: 1px solid #333333;
-  box-shadow: 4px 7px 5px rgba(0, 0, 0, 0.4);
-  }
-  
+  box-shadow: 4px 7px 5px rgba(0, 0, 0, 0.4); 
+}
+
   .button_pagination {
   display: flex;
   height: 30px;

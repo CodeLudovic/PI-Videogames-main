@@ -48,8 +48,7 @@ const getVideoGamesController = async () => {
 		// Devuelve los datos únicos como resultado
 		return uniqueData;
 	} catch (error) {
-		console.error("Error en la función getVideoGamesController:", error);
-		throw error;
+		return error;
 	}
 };
 

@@ -18,8 +18,6 @@ const {
 	postVideoGamesController,
 } = require("../controllers/postVideoGameController");
 
-const CircularJSON = require("circular-json");
-
 const { Videogame } = require("../db");
 
 const videoGamesHandler = async (req, res) => {
@@ -28,15 +26,15 @@ const videoGamesHandler = async (req, res) => {
 
 	try {
 		const response = await getVideoGamesByNameController(named, apiKey);
-		if (response.length > 0) {
+		if (response.length > 1) {
 			return res.status(200).json({ results: response });
 		} else {
 			return res
-				.status(404)
-				.json({ message: "Not found games with that name" });
+				.status(200)
+				.json({ message: `Not founded games with that name: ${named}` });
 		}
 	} catch (error) {
-		return res.status(500).json(error);
+		return res.status(500).json({ message: error.message });
 	}
 };
 
@@ -64,10 +62,10 @@ const getVideoGamesHandler = async (req, res) => {
 };
 
 const postVideoGamesHandler = async (req, res) => {
-	const { id, name, description, platforms, image, release, rating, genres } =
+	const { name, description, platforms, image, release, rating, genres } =
 		req.body;
 	const source_by = "DB";
-	console.log(id, name, description, platforms, image, release, rating, genres);
+	console.log(name, description, platforms, image, release, rating, genres);
 	if (
 		(!name || !description || !platforms || !image,
 		!release || !rating || !genres)
@@ -76,8 +74,7 @@ const postVideoGamesHandler = async (req, res) => {
 	}
 
 	try {
-		await postVideoGamesController(
-			id,
+		const response = await postVideoGamesController(
 			name,
 			description,
 			platforms,
@@ -87,11 +84,7 @@ const postVideoGamesHandler = async (req, res) => {
 			source_by,
 			genres
 		);
-		const allVg = await axios.get(`http://localhost:3001/videogames`);
-
-		//const serializedData = JSON.stringify(allVg);
-
-		return res.status(200).json(allVg.data);
+		return res.status(200).json({ response });
 	} catch (error) {
 		return res.status(404).json({ message: error.message });
 	}
@@ -130,8 +123,6 @@ const getGenresForVideoGame = async (videoGameId) => {
 				},
 			],
 		});
-
-		// Devuelve los géneros asociados a este videojuego
 		return videoGameFromDB;
 	} catch (error) {
 		console.error("Error en getGenresForVideoGame:", error);

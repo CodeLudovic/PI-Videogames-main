@@ -2,7 +2,6 @@
 import {
 	LOAD_VGS,
 	ADD_VG,
-	REMOVE_VG,
 	ORDER_BY_ASDC,
 	FILTER_BY_GENDER,
 	RESET,
@@ -10,15 +9,18 @@ import {
 	ACUMULATION_VGS,
 	SET_GENRES,
 	ADD_SEARCH,
-	LAST_ID_POSTED,
+	GAMES_SEARCHED,
+	SET_CREATED,
 } from "../type/types.js";
 
 export const initialState = {
 	videoGames: [],
 	allVideoGames: [],
+	gameSearched: [],
 	allCurrentDataPage: [],
 	genres: [],
-	lastIdPosted: 0,
+
+	created: false,
 };
 /* eslint-disable */
 export const rootReducer = (state = initialState, { type, payload }) => {
@@ -38,17 +40,19 @@ export const rootReducer = (state = initialState, { type, payload }) => {
 				allCurrentDataPage: payload,
 			};
 		case ADD_VG:
-			console.log(payload);
 			return {
 				...state,
-				allCurrentDataPage: payload,
+				allCurrentDataPage: [
+					...state.allCurrentDataPage,
+					payload.data.dataValues,
+				],
+				created: payload.created,
 			};
-		case LAST_ID_POSTED:
+		case GAMES_SEARCHED:
 			return {
 				...state,
-				lastIdPosted: payload,
+				gameSearched: payload,
 			};
-
 		case FILTER_BY_GENDER:
 			if (payload === "All") {
 				return {
@@ -66,33 +70,52 @@ export const rootReducer = (state = initialState, { type, payload }) => {
 			};
 
 		case FILTER_BY_SRC:
-			if (payload === "Api") {
-				return {
-					...state,
-					allCurrentDataPage: state.allCurrentDataPage.filter(
-						(videogame) => videogame.source_by === payload
-					),
-				};
-			} else if (payload === "DB") {
-				return {
-					...state,
-					allCurrentDataPage: state.allVideoGames.filter((videogame) => {
-						return videogame.source_by === payload;
-					}),
-				};
+			if (state.gameSearched < 1) {
+				if (payload === "Api") {
+					return {
+						...state,
+						allCurrentDataPage: state.allVideoGames.filter(
+							(videogame) => videogame.source_by === payload
+						),
+					};
+				}
+				if (payload === "DB") {
+					return {
+						...state,
+						allCurrentDataPage: state.allVideoGames.filter(
+							(videogame) => videogame.source_by === payload
+						),
+					};
+				}
+			} else {
+				if (payload === "Api") {
+					return {
+						...state,
+						allCurrentDataPage: state.gameSearched.filter(
+							(videogame) => videogame.source_by === payload
+						),
+					};
+				}
+				if (payload === "DB") {
+					return {
+						...state,
+						allCurrentDataPage: state.gameSearched.filter(
+							(videogame) => videogame.source_by === payload
+						),
+					};
+				}
 			}
-
-			return {
-				...state,
-				allCurrentDataPage: [...state.allVideoGames],
-			};
-
 		case RESET:
 			return {
 				...state,
 				allCurrentDataPage: [...state.allVideoGames],
+				gameSearched: [],
 			};
-
+		case SET_CREATED:
+			return {
+				...state,
+				created: payload,
+			};
 		case ORDER_BY_ASDC:
 			let result;
 			let copy2 = [...state.allCurrentDataPage];
@@ -125,8 +148,8 @@ export const rootReducer = (state = initialState, { type, payload }) => {
 		case ADD_SEARCH:
 			return {
 				...state,
-				allCurrentDataPage: [...state.allCurrentDataPage, ...payload],
-				allVideoGames: [...state.allCurrentDataPage, ...payload],
+				gameSearched: payload,
+				allCurrentDataPage: payload,
 			};
 
 		default:

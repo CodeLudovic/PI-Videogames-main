@@ -4,7 +4,7 @@ import style from "./SearchBar.module.css";
 import { useDispatch } from "react-redux";
 import { addSearch } from "../../redux/actions/actions";
 
-export const SearchBar = () => {
+export const SearchBar = ({ setPage, setInput }) => {
 	let [name, setName] = useState("");
 	const dispatch = useDispatch();
 
@@ -18,7 +18,8 @@ export const SearchBar = () => {
 			return;
 		}
 		dispatch(addSearch(name));
-		console.log(name);
+		setInput(1);
+		setPage(1);
 	};
 
 	return (

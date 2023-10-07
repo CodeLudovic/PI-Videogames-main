@@ -1,20 +1,23 @@
 /* eslint-disable*/
 import { NavLink } from "react-router-dom";
 import style from "./Card.module.css";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 export const Card = ({ item }) => {
 	return (
 		<>
 			<NavLink to={`/videogames/detail/${item.id}`} className={style.nav_link}>
 				<div className={style.card}>
-					<div className={style.stars}>
-						{[...new Array(5)].map((star, index) => {
-							return index < Math.ceil(Number(item.rating)) ? (
-								<AiFillStar key={index} />
-							) : (
-								<AiOutlineStar key={index} />
-							);
-						})}
+					<div
+						className={style.stars}
+						style={
+							item.rating < 3
+								? { color: "red" }
+								: item.rating > 3 && item.rating < 4
+								? { color: "gold" }
+								: item.rating > 4
+								? { color: "#008000" }
+								: { color: "#008000" }
+						}>
+						Rating: {item.rating}
 					</div>
 					{item.source_by === "Api" ? (
 						<>
@@ -27,9 +30,9 @@ export const Card = ({ item }) => {
 							<div
 								className={style.genre}
 								style={{ gridTemplateRows: "1fr 1fr 1fr" }}>
-								{item.genres?.map((genre) => (
-									<div>&nbsp;{genre.name}</div>
-								))}
+								{item.genres.length === 0
+									? "Not contains Genres"
+									: item.genres?.map((genre) => <div>&nbsp;{genre.name}</div>)}
 							</div>
 						</>
 					) : (
@@ -43,9 +46,11 @@ export const Card = ({ item }) => {
 							<div
 								className={style.genre}
 								style={{ gridTemplateRows: "1fr 1fr 1fr" }}>
-								{item.genres?.map((genre) => (
-									<div>&nbsp;{genre.name}</div>
-								))}
+								{item.Genres?.length === 0 ? (
+									<p>Genres Unavaliable</p>
+								) : (
+									item.genres?.map((genre) => <div>&nbsp;{genre.name}</div>)
+								)}
 							</div>
 						</>
 					)}

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
 	ADD_VG,
 	REMOVE_VG,
@@ -9,29 +10,11 @@ import {
 	SET_GENRES,
 	ACUMULATION_VGS,
 	ADD_SEARCH,
-	LAST_ID_POSTED,
+	SET_CREATED,
+	GAMES_SEARCHED,
 	// LOAD_DETAIL
 } from "../type/types.js";
-import axios from "axios";
-
-// export const loadDetail = (state = [], id) => {
-// 	try {
-// 		return (dispatch) => {
-// 			// const startIndex = (currentPage - 1) * 20;
-// 			// const endIndex = startIndex + 20;
-
-// 			const filteredDetails = state.filter((detail) => detail.id === id);
-
-// 			return dispatch({
-// 				type: SET_CURRENT_PAGE_DATA,
-// 				payload: filteredDetails,
-// 			});
-// 		};
-// 		// eslint-disable-next-line
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// };
+import axios, { AxiosError } from "axios";
 
 export const paginationVGS = () => {
 	return async (dispatch) => {
@@ -48,39 +31,29 @@ export const paginationVGS = () => {
 		}
 	};
 };
-// export const loadVGSPagination = (state = [], currentPage) => {
-// 	try {
-// 		return (dispatch) => {
-// 			const startIndex = (currentPage - 1) * 20;
-// 			const endIndex = startIndex + 20;
-
-// 			const vgstate = state.slice(startIndex, endIndex);
-
-// 			return dispatch({
-// 				type: SET_CURRENT_PAGE_DATA,
-// 				payload: vgstate,
-// 			});
-// 		};
-// 		// eslint-disable-next-line
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// };
 
 export const addVG = (videogame) => {
 	try {
 		const endpoint = "http://localhost:3001/videogames";
 		return async (dispatch) => {
 			const { data } = await axios.post(endpoint, videogame);
+
 			return dispatch({
 				type: ADD_VG,
-				payload: data,
+				payload: { data: data.response, created: data.response.created },
 			});
 		};
 		// eslint-disable-next-line
 	} catch (error) {
 		console.log(error);
 	}
+};
+
+export const setCreated = (input) => {
+	return {
+		type: SET_CREATED,
+		payload: input,
+	};
 };
 
 export const removeVG = (id) => {
@@ -99,19 +72,20 @@ export const removeVG = (id) => {
 };
 
 export const addSearch = (name) => {
-	try {
-		const endpoint = `http://localhost:3001/videogames/name?search=${name}`;
-		return async (dispatch) => {
-			const { data } = await axios(endpoint);
-			console.log(data.results);
-			return dispatch({
-				type: ADD_SEARCH,
-				payload: data.results,
-			});
-		};
-	} catch (error) {
-		console.log(error);
-	}
+	const endpoint = `http://localhost:3001/videogames/name?search=${name}`;
+	return async (dispatch) => {
+		const { data } = await axios.get(endpoint);
+		console.log(data.message);
+		if (
+			data.message == `Not founded games with that name: ${name.toLowerCase()}`
+		) {
+			return alert(data.message);
+		}
+		return dispatch({
+			type: ADD_SEARCH,
+			payload: data.results,
+		});
+	};
 };
 
 export const filterVgGender = (gender) => {
@@ -121,10 +95,10 @@ export const filterVgGender = (gender) => {
 	};
 };
 
-export const lastIdPosted = (id) => {
+export const gamesSearched = (games) => {
 	return {
-		type: LAST_ID_POSTED,
-		payload: id,
+		type: GAMES_SEARCHED,
+		payload: games,
 	};
 };
 

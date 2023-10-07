@@ -11,3 +11,5 @@ export const LOAD_DETAIL = "LOAD_DETAIL";
 export const SET_GENRES = "SET_GENRES";
 export const ADD_SEARCH = "ADD_SEARCH";
 export const LAST_ID_POSTED = "LAST_ID_POSTED";
+export const GAMES_SEARCHED = "GAMES_SEARCHED";
+export const SET_CREATED = "SET_CREATED";
